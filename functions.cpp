@@ -4,71 +4,66 @@
 #include <string>
 #include <stack>
 
+using namespace std;
+
 bool start_num[9][9];
-int x = 0;
-int y = 0;
-//std::stack<int> stack;
+static int x = 0;
+static int y = 0;
 bool back = false;
 bool correct = true;
-unsigned short count = 0;
-void solve(int** &field)
+int** field = 0;
+int size = 0;
+void init(int** &field_)
 {
-	count++;
-	if (count == 3992) {
-		std::cout << "\n 1long";
-		return;
-	}
-	if (x > 8 || y > 8) return;
-	if (x < 0 || y < 0) {
-		std::cout << "\nError!";
-		return;
-	}
-	if (back) {
-		if (start_num[x][y]) {
-			if (x > 0) {
-				x--;
-				return solve(field);
+	field = field_;
+}
+void solve()
+{
+	while ((!(x > 8 || y > 8)) && (!(x < 0 || y < 0)))
+	{
+		if (back) {
+			if (start_num[x][y]) {
+				if (x > 0) {
+					x--;
+				}
+				else {
+					x = 8;
+					y--;
+				}
+			}
+			else back = false;
+		}
+		else {
+			if (!start_num[x][y]) {
+				field[x][y] = correct_put(x, y, field[x][y]);
+				//print_arr(field);
+			}
+			if (field[x][y] == 0) {
+				back = true;
+				if (x > 0) {
+					x--;
+				}
+				else {
+					x = 8;
+					y--;
+				}
 			}
 			else {
-				x = 8;
-				y--;
-				return solve(field);
+				if (x < 8) {
+					x++;
+				}
+				else {
+					x = 0;
+					y++;
+				}
 			}
-		}
-		else back = false;
-	}
-	if (!start_num[x][y]) {
-		field[x][y] = correct_put(field, x, y, field[x][y]);
-		//print_arr(field);
-	}
-	if (field[x][y] == 0) {
-		back = true;
-		if (x > 0) {
-			x--;
-			return solve(field);
-		}
-		else {
-			x = 8;
-			y--;
-			return solve(field);
-		}
-	}
-	else {
-		if (x < 8) {
-			x++;
-			return solve(field);
-		}
-		else {
-			x = 0;
-			y++;
-			return solve(field);
 		}
 	}
 }
-int correct_put(int** &field, int x, int y, int start_n)
+int correct_put(int x, int y, int start_n)
 {
 	correct = true;
-	for (int num = start_n+1; num <= 9; num++) {
+	for (int num = start_n + 1; num <= 9; num++) {
 		correct = true;
 		for (int row = 0; row < 9; row++) {
 			if (row != y && field[x][row] == num) {
@@ -99,10 +94,10 @@ int correct_put(int** &field, int x, int y, int start_n)
 	}
 	return 0;
 }
-void write_arr(int** arr)
+void write_arr(int** arr, string output_file_name)
 {
 	std::ofstream out;
-	out.open("C:\\Users\\Кирило\\source\\repos\\Sudoku\\Sudoku\\sudoku_solved.txt");
+	out.open(output_file_name);
 	if (out.is_open())
 	{
 		for (int i = 0; i < 9; i++) {
@@ -113,12 +108,12 @@ void write_arr(int** arr)
 		}
 	}
 }
-int** read_arr()
+int** read_arr(string input_file_name)
 {
 	int** result = new int*[9];
 	for (int i = 0; i < 9; i++) result[i] = new int[9];
 	char temp;
-	std::ifstream in("C:\\Users\\Кирило\\source\\repos\\Sudoku\\Sudoku\\sudoku.txt");
+	std::ifstream in(input_file_name);
 	if (in.is_open())
 	{
 		for (int i = 0; i < 9; i++) {
@@ -128,9 +123,16 @@ int** read_arr()
 						result[i][j] = (int)(temp - 0x30);
 						start_num[i][j] = true;
 					}
-					else if (temp == 0x2A || 1) {
+					else if (temp == 0x2A || temp == 0x30) {
 						result[i][j] = 0;
 						start_num[i][j] = false;
+					}
+					else {
+						if (j > 0) j--;
+						else {
+							j = 8;
+							i--;
+						}
 					}
 				}
 				else	result[i][j] = 0;

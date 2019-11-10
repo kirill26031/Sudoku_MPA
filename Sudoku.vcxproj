@@ -150,7 +150,7 @@
     <ClInclude Include="functions.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\..\Desktop\sudoku.txt" />
+    <Text Include="sudoku.txt" />
     <Text Include="sudoku_solved.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

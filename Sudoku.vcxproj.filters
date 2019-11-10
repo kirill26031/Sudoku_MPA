@@ -28,7 +28,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\..\Desktop\sudoku.txt" />
     <Text Include="sudoku_solved.txt" />
+    <Text Include="sudoku.txt" />
   </ItemGroup>
 </Project>
